@@ -1,29 +1,32 @@
-name: Deploy Pipeline
+name: Pipeline
 
 on:
   push:
     branches:
       - prerelease
-      - main
 
 jobs:
   deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to TEST
-        if: github.ref == 'refs/heads/prerelease'
+      - name: Pull prerelease into TEST and run
         shell: powershell
         run: |
-          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs\hello_world.py" -Force
-          Write-Host "Deployed to TEST"
+          cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
+          git switch prerelease
+          git pull origin prerelease
+          python hello_world.py
 
-      - name: Deploy to MAIN
-        if: github.ref == 'refs/heads/main'
+      - name: Merge prerelease into main
         shell: powershell
         run: |
-          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs\hello_world.py" -Force
-          Write-Host "Deployed to MAIN"
+          cd "C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs"
+
+          git fetch origin
+          git switch main
+          git pull origin main
+
+          git merge origin/prerelease
+
+          python hello_world.py
