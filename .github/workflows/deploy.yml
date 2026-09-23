@@ -1,0 +1,29 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches:
+      - prerelease
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to TEST
+        if: github.ref == 'refs/heads/prerelease'
+        shell: powershell
+        run: |
+          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs\hello_world.py" -Force
+          Write-Host "Deployed to TEST"
+
+      - name: Deploy to MAIN
+        if: github.ref == 'refs/heads/main'
+        shell: powershell
+        run: |
+          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs\hello_world.py" -Force
+          Write-Host "Deployed to MAIN"

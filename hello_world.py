@@ -1,0 +1,1 @@
+print("tiri piri pasaule !!!!!")
