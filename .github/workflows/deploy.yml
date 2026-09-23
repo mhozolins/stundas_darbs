@@ -24,42 +24,40 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      # MAIN -> PRERELEASE
       - name: Update prerelease branch
         shell: powershell
         run: |
           git fetch origin
-
           git switch -C prerelease origin/prerelease
-
           git merge origin/main --no-edit
-
           git push origin prerelease
 
-      # UPDATE TEST FOLDER FROM PRERELEASE
       - name: Update TEST folder
         shell: powershell
+        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs'
         run: |
-          cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
-
           git fetch origin
-
           git switch -C prerelease origin/prerelease
-
           git reset --hard origin/prerelease
-
           Write-Host "TEST updated!"
 
-      # RUN TEST PROGRAM
       - name: Run TEST program
         shell: powershell
+        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs'
         run: |
-          cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
-
           python hello_world.py
 
-      # UPDATE MAIN FOLDER FROM MAIN BRANCH
       - name: Update MAIN folder
         shell: powershell
+        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs'
         run: |
-          cd "C:\Users\miks1\Documents
+          git fetch origin
+          git switch -C main origin/main
+          git reset --hard origin/main
+          Write-Host "MAIN updated!"
+
+      - name: Run MAIN program
+        shell: powershell
+        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs'
+        run: |
+          python hello_world.py
