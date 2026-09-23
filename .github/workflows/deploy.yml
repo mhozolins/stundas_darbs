@@ -16,9 +16,8 @@ jobs:
         shell: powershell
         working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs'
         run: |
-          git fetch origin
           git switch prerelease
-          git reset --hard origin/prerelease
+          git pull origin prerelease
           python hello_world.py
 
   deploy_main:
@@ -30,7 +29,6 @@ jobs:
         shell: powershell
         working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs'
         run: |
-          git fetch origin
           git switch main
-          git reset --hard origin/main
+          git pull origin main
           python hello_world.py
