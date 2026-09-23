@@ -1,1 +1,1 @@
-print("tiri piri pasaule !!!!!")
+print("cau comini  !!!!!")
