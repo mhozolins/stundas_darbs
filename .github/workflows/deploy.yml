@@ -24,25 +24,42 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: Merge main into prerelease
+      # MAIN -> PRERELEASE
+      - name: Update prerelease branch
         shell: powershell
         run: |
           git fetch origin
+
           git switch -C prerelease origin/prerelease
+
           git merge origin/main --no-edit
+
           git push origin prerelease
 
-      - name: Update TEST
+      # UPDATE TEST FOLDER FROM PRERELEASE
+      - name: Update TEST folder
         shell: powershell
         run: |
           cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
 
           git fetch origin
-          git switch prerelease
+
+          git switch -C prerelease origin/prerelease
+
           git reset --hard origin/prerelease
 
-      - name: Run program
+          Write-Host "TEST updated!"
+
+      # RUN TEST PROGRAM
+      - name: Run TEST program
         shell: powershell
         run: |
           cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
+
           python hello_world.py
+
+      # UPDATE MAIN FOLDER FROM MAIN BRANCH
+      - name: Update MAIN folder
+        shell: powershell
+        run: |
+          cd "C:\Users\miks1\Documents
