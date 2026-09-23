@@ -1,63 +1,33 @@
-name: Main to Prerelease Pipeline
+name: Deploy Pipeline
 
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
-  update-prerelease:
-    runs-on: self-hosted
+  deploy_test:
+    runs-on: [self-hosted, test]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        shell: powershell
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-      - name: Update prerelease branch
-        shell: powershell
-        run: |
-          git fetch origin
-          git switch -C prerelease origin/prerelease
-          git merge origin/main --no-edit
-          git push origin prerelease
-
-      - name: Update TEST folder
+      - name: Update TEST
         shell: powershell
         working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs'
         run: |
           git fetch origin
-          git switch -C prerelease origin/prerelease
+          git switch prerelease
           git reset --hard origin/prerelease
-          Write-Host "TEST updated!"
-
-      - name: Run TEST program
-        shell: powershell
-        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs'
-        run: |
           python hello_world.py
 
-      - name: Update MAIN folder
+  deploy_main:
+    runs-on: [self-hosted, prod]
+
+    steps:
+      - name: Update MAIN
         shell: powershell
         working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs'
         run: |
           git fetch origin
-          git switch -C main origin/main
+          git switch main
           git reset --hard origin/main
-          Write-Host "MAIN updated!"
-
-      - name: Run MAIN program
-        shell: powershell
-        working-directory: 'C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs'
-        run: |
           python hello_world.py
