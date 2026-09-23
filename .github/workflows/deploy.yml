@@ -1,29 +1,56 @@
-name: Deploy Pipeline
+name: Main to Prerelease Pipeline
 
 on:
   push:
     branches:
-      - prerelease
       - main
 
+permissions:
+  contents: write
+
 jobs:
-  deploy:
+  update-prerelease:
     runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Deploy to TEST
-        if: github.ref == 'refs/heads/prerelease'
+      - name: Configure Git
         shell: powershell
         run: |
-          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs\hello_world.py" -Force
-          Write-Host "Deployed to TEST"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
 
-      - name: Deploy to MAIN
-        if: github.ref == 'refs/heads/main'
+      - name: Update prerelease branch from main
         shell: powershell
         run: |
-          Copy-Item "hello_world.py" "C:\Users\miks1\Documents\STUNDAS DARBS\MAIN\stundas_darbs\hello_world.py" -Force
-          Write-Host "Deployed to MAIN"
+          git fetch origin
+
+          git switch prerelease
+
+          git pull origin prerelease
+
+          git merge origin/main --no-edit
+
+          git push origin prerelease
+
+      - name: Update TEST folder
+        shell: powershell
+        run: |
+          cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
+
+          git fetch origin
+
+          git switch prerelease
+
+          git pull origin prerelease
+
+      - name: Run Python program
+        shell: powershell
+        run: |
+          cd "C:\Users\miks1\Documents\STUNDAS DARBS\TEST\stundas_darbs"
+
+          python hello_world.py
