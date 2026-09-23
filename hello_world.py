@@ -1,1 +1,1 @@
-print("cau cominsiiiii pls strada ludzu !!!!!!!!!!!!!!")
+print("cau cominsiiiii pls strada ludzu ludzu ej !!!!!!!!!!!!!!")

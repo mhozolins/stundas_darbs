@@ -3,10 +3,12 @@ name: Deploy Pipeline
 on:
   push:
     branches:
+      - prerelease
       - main
 
 jobs:
   deploy_test:
+    if: github.ref == 'refs/heads/prerelease'
     runs-on: [self-hosted, test]
 
     steps:
@@ -20,6 +22,7 @@ jobs:
           python hello_world.py
 
   deploy_main:
+    if: github.ref == 'refs/heads/main'
     runs-on: [self-hosted, prod]
 
     steps:
